@@ -1,0 +1,7 @@
+CREATE TABLE orderBook (
+	id  INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	date TIMESTAMP,
+        rate DOUBLE,
+        type TEXT,
+        amount DOUBLE
+);

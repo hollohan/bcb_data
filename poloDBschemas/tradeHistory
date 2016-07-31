@@ -1,0 +1,15 @@
+CREATE TABLE tradeHistory (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	tradeID INT,
+	rate DOUBLE,
+	amount DOUBLE,
+	total DOUBLE,
+	type TEXT,
+	date TIMESTAMP,
+        poloDt text,
+        thirtyMin DOUBLE,
+        oneHr DOUBLE,
+        MACD DOUBLE,
+        bsratio DOUBLE,
+        accel DOUBLE
+);
