@@ -7,7 +7,7 @@ import pymysql.cursors
 from threading import Thread
 from datetime import datetime, timedelta
 from os import execv
-from sys import argv
+from sys import argv, executable
 
 # make sql server connections
 conn = pymysql.connect(
@@ -52,7 +52,7 @@ class MyComponent(ApplicationSession):
 
     def onDisconnect(self):
         print("--- onDisconnect --- restarting")
-	os.execv(__file__, argv)
+	execv(executable, ['python'] + argv)
     
     def execute_sql(self, mess):
         # prepare sql statement
@@ -144,7 +144,7 @@ class MyComponent(ApplicationSession):
 		results = cursor.fetchall()
 		conn.commit()
 	except Exception as e:
-		return 'damnit, not again - ' + str(e)
+		return 'ugh, not again - ' + str(e)
 	return results
 	    
 
