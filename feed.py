@@ -49,11 +49,13 @@ class MyComponent(ApplicationSession):
     
     def onLeave(self, details):
         print("--- onLeave --- " + str(details))
+	
 
     def onDisconnect(self):
         print("--- onDisconnect --- restarting")
 	execv(executable, ['python'] + argv)
-    
+   	print('--- onDisconnect --- after execv()')
+	 
     def execute_sql(self, mess):
         # prepare sql statement
         for thing in mess:
@@ -138,14 +140,6 @@ class MyComponent(ApplicationSession):
                 print('SQL ERROR - ' + str(e))
                 exit()
 
-    def runQuery(self, qString):
-	try:
-		cursor.execute(qString)
-		results = cursor.fetchall()
-		conn.commit()
-	except Exception as e:
-		return 'ugh, not again - ' + str(e)
-	return results
 	    
 
 if __name__ == '__main__':
@@ -153,7 +147,9 @@ if __name__ == '__main__':
         runner = ApplicationRunner(url=u"wss://api.poloniex.com", realm=u"realm1")
         runner.run(MyComponent)
 	print('--- main --- done ApplicationRunner.run()')
-    finally: conn.close()
+    finally:
+	print('--- main --- finally:')
+	conn.close()
     
 
 
