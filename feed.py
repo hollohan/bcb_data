@@ -82,7 +82,7 @@ class MyComponent(ApplicationSession):
 		self.calcList.append({'date': d, 'rate': rate, 'type': typ, 'amount': amount})
 
 		# calculate fiveMin avg
-		thirtyMinDiff = timedelta(0,300)
+		thirtyMinDiff = timedelta(0,3600)
 		newList = [float(x['rate']) for x in self.calcList if x['date']>d-thirtyMinDiff]
 		thirtyMinAvg = sum(newList)/len(newList)
 		#print(len(newList))
@@ -99,7 +99,7 @@ class MyComponent(ApplicationSession):
 		macd = thirtyMinAvg - oneHrAvg
 
 		# calc b/s
-		fiveMinDiff = timedelta(0,300)
+		fiveMinDiff = timedelta(0,1800)
 		fiveMinList = [x for x in self.calcList if x['date']>d-fiveMinDiff]
 		sells = 0
 		buys = 0
@@ -111,8 +111,8 @@ class MyComponent(ApplicationSession):
 		bsratio = float(buys-sells)/(buys+sells)		
 		
 		# accel
-		if item['type'] == 'sell': accel = sells
-		elif item['type'] == 'buy': accel = buys
+		if item['type'] == 'sell': accel = sells/30
+		elif item['type'] == 'buy': accel = buys/30
 		
 		# keep calcList short
 		limit = timedelta(0,3720)
