@@ -49,6 +49,8 @@ class MyComponent(ApplicationSession):
     
     def onLeave(self, details):
         print("--- onLeave --- " + str(details))
+	execv(executable, ['python'] + argv)
+        print('--- onLeave --- after execv()')
 	
 
     def onDisconnect(self):
@@ -82,7 +84,7 @@ class MyComponent(ApplicationSession):
 		self.calcList.append({'date': d, 'rate': rate, 'type': typ, 'amount': amount})
 
 		# calculate fiveMin avg
-		thirtyMinDiff = timedelta(0,3600)
+		thirtyMinDiff = timedelta(0,1800)
 		newList = [float(x['rate']) for x in self.calcList if x['date']>d-thirtyMinDiff]
 		thirtyMinAvg = sum(newList)/len(newList)
 		#print(len(newList))
@@ -118,13 +120,13 @@ class MyComponent(ApplicationSession):
 		limit = timedelta(0,3720)
 		self.calcList = [x for x in self.calcList if x['date']>d-limit]
                 time_stop = datetime.now()
-                print('--- execute_sql --- time it took to do calculations: ' + str(time_stop-time_start))
+                #print('--- execute_sql --- time it took to do calculations: ' + str(time_stop-time_start))
 
                 time_start = datetime.now()
                 qString = 'INSERT INTO tradeHistory (tradeID, rate, amount, total, type, poloDt, oneHr, thirtyMin, MACD, bsratio, accel) VALUES (%s, %s, %s, %s, "%s", "%s", %s, %s, %s, %s, %s)' % (tradeID, rate, amount, total, typ, dt, oneHrAvg, thirtyMinAvg, macd, bsratio, accel)
                 #print(qString)
                 time_stop = datetime.now()
-                print('--- execute_sql --- time it took to do INSERT INTO: ' + str(time_stop-time_start))
+                #print('--- execute_sql --- time it took to do INSERT INTO: ' + str(time_stop-time_start))
             else:
                 print('poloBooks - recvd invalid type')
                 exit()
