@@ -41,9 +41,12 @@ class MyComponent(ApplicationSession):
 
         try:
             yield self.subscribe(oncounter_books, u'BTC_ETH')
-            print("subscribed to topic - books")
+            print("subscribed to topic - tradeHistory")
 	    #yield self.subscribe(oncounter_ticker, u'ticker')
             #print("subscribed to topic - ticker")
+
+	    # preload calcList
+	    self.syncCalcList()
         except Exception as e:
             print("could not subscribe to topic: " + str(e))
     
@@ -142,7 +145,22 @@ class MyComponent(ApplicationSession):
                 print('SQL ERROR - ' + str(e))
                 exit()
 
-	    
+
+    # {date, rate, type, amount}
+    def syncCalcList(self):
+	# query data
+	qString = 'SELECT UNIX_TIMESTAMP(poloDt),rate,type,amount FROM tradeHistory WHERE poloDt>date_add(now(), interval -3720 second)'
+        try:
+                # execute qString
+                cursor.execute(qString)
+                results = cursor.fetchall()
+		conn.commit()
+	except Exception as e:
+		return 'Melting Down - ' + str(e)
+
+	for thing in results:
+		#print(thing)
+		self.calcList.append({'date':datetime.fromtimestamp(thing[0]), 'rate':thing[1], 'type':thing[2], 'amount':thing[3]})		    
 
 if __name__ == '__main__':
     try:
